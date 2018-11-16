@@ -7,13 +7,15 @@
 
 
 import sys
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 import ast
 from _ast import Expr
-import xbmc
 import xbmcgui
 import pyxbmct
-from common import *
+from resources.lib.common import *
 
 
 WINDOW_WIDTH = int(this_addon.getSetting("window_width"))
@@ -173,8 +175,8 @@ class MainWindow(pyxbmct.AddonDialogWindow):
 
         self.history += message
 
-        #self.history_box.setText(self.history)
-        #self.history_box.scroll(len(self.history))
+        # self.history_box.setText(self.history)
+        # self.history_box.scroll(len(self.history))
         self.show_history()
 
     def show_history(self):
@@ -265,20 +267,20 @@ class MainWindow(pyxbmct.AddonDialogWindow):
 
         try:
             tree = ast.parse(code)
-        except Exception, e:
+        except Exception as e:
             return str(e)
         if not tree.body:
             return ""
         if isinstance(tree.body[0], Expr):
             try:
                 result = eval(code, self.globals)
-            except Exception, e:
+            except Exception as e:
                 return str(e)
             return str(result)
         else:
             try:
-                exec code in self.globals
-            except Exception, e:
+                exec(code, self.globals)
+            except Exception as e:
                 return str(e)
             return ""
 
@@ -301,7 +303,6 @@ class MainWindow(pyxbmct.AddonDialogWindow):
         command = self.command_history.get_next()
         if command:
             self.command.setText(command)
-
 
     def onAction(self, Action):
         """

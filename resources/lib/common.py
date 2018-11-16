@@ -13,6 +13,8 @@ import json
 
 this_addon = xbmcaddon.Addon()
 addonID = this_addon.getAddonInfo("id")
+addonName = this_addon.getAddonInfo("name")
+addon_folder = xbmc.translatePath(this_addon.getAddonInfo("path"))
 
 
 def error(message):
@@ -21,7 +23,10 @@ def error(message):
     :param: message: str - error message
     :return: None
     """
-    notify("Error:," + message)
+
+    header = "Error:"
+
+    notify(header, message)
 
 
 def info(message):
@@ -31,17 +36,22 @@ def info(message):
     :return: None
     """
 
-    notify("Info:," + message)
+    header = "Info:"
+
+    notify(header, message)
 
 
-def notify(message):
+def notify(header, message):
+
     """
     Opens notification window with message
     :param: message: str - message
     :return: None
     """
+
     icon = ""  # os.path.join(addonFolder, "icon.png")
-    xbmc.executebuiltin(unicode('XBMC.Notification(' + message + ',3000,' + icon + ')').encode("utf-8"))
+
+    xbmc.executebuiltin('XBMC.Notification("{0}","{1}",3000,"{2}")'.format(header, message, icon))
 
 
 def debug(content):
@@ -50,9 +60,12 @@ def debug(content):
     :param content: content which should be output
     :return: None
     """
-    if type(content) is str:
-        message = unicode(content, "utf-8")
-    else:
+    try:
+        if type(content) is str:
+            message = unicode(content, "utf-8")
+        else:
+            message = content
+    except NameError:
         message = content
     log(message, xbmc.LOGDEBUG)
 
@@ -64,9 +77,12 @@ def log_exception(content):
     :return: None
     """
 
-    if type(content) is str:
-        message = unicode(content, "utf-8")
-    else:
+    try:
+        if type(content) is str:
+            message = unicode(content, "utf-8")
+        else:
+            message = content
+    except NameError:
         message = content
     log(message, xbmc.LOGERROR)
 
@@ -99,14 +115,10 @@ def image(filename):
     :rtype: str
     """
 
-    addon_folder = xbmc.translatePath(this_addon.getAddonInfo("path"))
-    return os.path.join(addon_folder,
-                        "resources",
-                        "img",
-                        filename)
+    return os.path.join(addon_folder, "resources", "img", filename)
 
 
-def JSONRPC(method, params={}):
+def JSONRPC(method, params=None):
     """
     Execute JSON-RPC method
     :param method: name of the method. Example "Input.Back"
@@ -116,6 +128,9 @@ def JSONRPC(method, params={}):
     :return: response as a string or None (in case of exception)
     :rtype: str or None
     """
+
+    if params is None:
+        params = {}
 
     data = {
         "jsonrpc": "2.0",
@@ -127,10 +142,15 @@ def JSONRPC(method, params={}):
     command = json.dumps(data)
 
     try:
+
         response = xbmc.executeJSONRPC(command)
-    except Exception, e:
+
+    except Exception as e:
+
         log_exception("Error executing JSON RPC method " + method)
         log_exception("Params: " + str(params))
         log_exception(str(e))
+
         return None
+
     return response
