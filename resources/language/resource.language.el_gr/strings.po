@@ -1,0 +1,30 @@
+# Kodi Media Center language file
+# Addon Name: Dev's Tools
+# Addon id: plugin.program.dev_tools
+# Addon version: 1.0.0
+# Addon Provider: kharts, twilight0
+
+
+msgctxt "#30001"
+msgid "General"
+msgstr "Γενικά"
+
+msgctxt "#30002"
+msgid "Window width"
+msgstr "Έύρος παραθύρου"
+
+msgctxt "#30003"
+msgid "Window height"
+msgstr "Ύψος παραθύρου"
+
+msgctxt "#30004"
+msgid "History rows"
+msgstr "Γραμμές ιστορικού"
+
+msgctxt "#30005"
+msgid "Run command on Enter"
+msgstr "Εκτέλεση εντολής με το Enter"
+
+msgctxt "#30004"
+msgid ""
+msgstr ""
